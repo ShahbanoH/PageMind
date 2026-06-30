@@ -1012,36 +1012,71 @@ function FloV5() {
   );
 }
 
-function FloV6() {
+function FloV6({ decisions }) {
+  // Pull each slot's chosen content out of the live decisions array.
+  // Falls back to sensible defaults only if decisions haven't loaded yet
+  // (e.g. first paint before generation completes), so the page never
+  // silently disagrees with the "what changed and why" log.
+  const find = (el) => decisions?.find(d => d.el === el);
+
+  const stripQuotes = (s) => (s || "").replace(/^"|"$/g, "");
+
+  const headlineDec = find("Headline");
+  const subtextDec = find("Hero Subtext");
+  const socialDec = find("Social Proof Block");
+  const ctaDec = find("CTA Copy");
+  const outcomeDec = find("Outcome Strip");
+  const featureGridDec = find("Feature Grid");
+
+  const headline = stripQuotes(headlineDec?.quote) || "You just had a great investor call. Now what?";
+  const subtext = stripQuotes(subtextDec?.quote) || "Flo joins your calls, captures everything, and sends a clean summary to your team — so you stay fully present instead of frantically scribbling notes that fade by morning.";
+  const ctaText = stripQuotes(ctaDec?.quote) || "Fix this today — free for 14 days";
+  const outcomeRaw = stripQuotes(outcomeDec?.quote) || "5 hrs/week saved · Zero missed follow-ups · Works with Zoom, Meet & Teams";
+  const outcomeChips = outcomeRaw.split("·").map(s => s.trim()).filter(Boolean);
+
+  // Render the headline with the last clause in accent color, splitting on
+  // common sentence breaks so any chosen headline gets the same visual treatment.
+  const headlineParts = headline.split(/(?<=[.?!])\s+/);
+  const headlineLead = headlineParts.slice(0, -1).join(" ");
+  const headlineEmph = headlineParts[headlineParts.length - 1] || headline;
+
+  const showFeatureGridInHero = featureGridDec && !featureGridDec.removed;
+
   return (
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#FFFFFF",color:"#1A1A1F",minHeight:"100vh"}}>
       <nav style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #EAEAEF"}}>
         <span style={{fontWeight:800,fontSize:19,color:"#5B4FE8",letterSpacing:"-0.03em"}}>flo</span>
         <div style={{display:"flex",gap:24,fontSize:13,color:"#6B6B76"}}>{["How it works","Pricing"].map(t=><span key={t}>{t}</span>)}</div>
-        <button style={{background:"#5B4FE8",color:"#fff",padding:"9px 20px",borderRadius:8,border:"none",fontWeight:700,fontSize:13,cursor:"pointer"}}>Fix this today — free</button>
+        <button style={{background:"#5B4FE8",color:"#fff",padding:"9px 20px",borderRadius:8,border:"none",fontWeight:700,fontSize:13,cursor:"pointer"}}>{ctaText.split(" — ")[0] || "Fix this today"} — free</button>
       </nav>
       <div style={{padding:"72px 48px 52px",maxWidth:820,margin:"0 auto"}}>
         <div style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(91,79,232,0.08)",border:"1px solid #5B4FE8",borderRadius:20,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#5B4FE8",marginBottom:24,letterSpacing:"0.04em"}}>
           ⚡ USED BY 500+ FOUNDERS FROM YC, TECHSTARS & A16Z PORTFOLIO
         </div>
-        <h1 style={{fontSize:56,fontWeight:800,lineHeight:1.05,marginBottom:22,letterSpacing:"-0.03em",color:"#1A1A1F"}}>
-          You just had a great<br/><span style={{color:"#5B4FE8"}}>investor call.</span><br/>Now what?
+        <h1 style={{fontSize:48,fontWeight:800,lineHeight:1.15,marginBottom:22,letterSpacing:"-0.03em",color:"#1A1A1F"}}>
+          {headlineLead && <>{headlineLead}<br/></>}<span style={{color:"#5B4FE8"}}>{headlineEmph}</span>
         </h1>
         <p style={{fontSize:17,color:"#52525E",lineHeight:1.8,marginBottom:36,maxWidth:600}}>
-          Flo joins your calls, captures everything, and sends a clean summary to your team — so you stay fully present instead of frantically scribbling notes that fade by morning.
+          {subtext}
         </p>
         <div style={{display:"flex",gap:12,marginBottom:36,flexWrap:"wrap"}}>
-          {["5 hrs/week saved","Zero missed follow-ups","Works with Zoom, Meet & Teams"].map((it,i)=>(
+          {outcomeChips.map((it,i)=>(
             <div key={i} style={{display:"flex",alignItems:"center",gap:6,background:"#F4F3FE",border:"1px solid #E1DEFB",borderRadius:7,padding:"7px 13px",fontSize:12.5,color:"#4A3FC4"}}>
               <span style={{color:"#5B4FE8"}}>✓</span>{it}
             </div>
           ))}
         </div>
-        <button style={{background:"#5B4FE8",color:"#fff",padding:"15px 34px",borderRadius:9,border:"none",fontWeight:800,fontSize:16,cursor:"pointer",marginBottom:10}}>Fix this today — free for 14 days</button>
+        <button style={{background:"#5B4FE8",color:"#fff",padding:"15px 34px",borderRadius:9,border:"none",fontWeight:800,fontSize:16,cursor:"pointer",marginBottom:10}}>{ctaText}</button>
         <div style={{fontSize:11,color:"#8A8A94"}}>No credit card. Joins your next call automatically.</div>
+
+        {showFeatureGridInHero && (
+          <div style={{marginTop:32,padding:18,background:"#FAFAFB",border:"1px solid #EAEAEF",borderRadius:10,fontSize:12.5,color:"#52525E"}}>
+            {socialDec ? stripQuotes(socialDec.quote) : "Feature grid kept in hero per latest analysis."}
+          </div>
+        )}
       </div>
 
-      {/* Social proof — from V3 */}
+      {/* Social proof — content slot chosen by Claude (default: V3 testimonial wall) */}
       <div style={{padding:"0 48px 52px",maxWidth:820,margin:"0 auto"}}>
         <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:22,flexWrap:"wrap"}}>
           <span style={{fontSize:12,color:"#8A8A94",fontWeight:500}}>Trusted by founders from</span>
@@ -1060,23 +1095,25 @@ function FloV6() {
             </div>
           ))}
         </div>
-        {/* How it works — below fold */}
-        <div style={{borderTop:"1px solid #EAEAEF",paddingTop:36,marginBottom:44}}>
-          <div style={{fontSize:10,fontWeight:700,color:"#8A8A94",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:20}}>How Flo works</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
-            {[{i:"🎙️",t:"Auto-joins your calls",d:"Connects to your calendar and shows up to every meeting."},{i:"✅",t:"Extracts action items",d:"Every to-do, decision, and commitment pulled out automatically."},{i:"📨",t:"Sends summaries instantly",d:"Clean notes in Slack or email before you close the Zoom window."}].map((f,i)=>(
-              <div key={i} style={{background:"#FAFAFB",borderRadius:9,padding:18,border:"1px solid #EAEAEF"}}>
-                <div style={{fontSize:22,marginBottom:8}}>{f.i}</div>
-                <div style={{fontWeight:600,fontSize:13,marginBottom:5,color:"#1A1A1F"}}>{f.t}</div>
-                <div style={{fontSize:12,color:"#6B6B76",lineHeight:1.6}}>{f.d}</div>
-              </div>
-            ))}
+        {/* How it works — below fold, only shown when the feature grid was removed from hero */}
+        {!showFeatureGridInHero && (
+          <div style={{borderTop:"1px solid #EAEAEF",paddingTop:36,marginBottom:44}}>
+            <div style={{fontSize:10,fontWeight:700,color:"#8A8A94",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:20}}>How Flo works</div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
+              {[{i:"🎙️",t:"Auto-joins your calls",d:"Connects to your calendar and shows up to every meeting."},{i:"✅",t:"Extracts action items",d:"Every to-do, decision, and commitment pulled out automatically."},{i:"📨",t:"Sends summaries instantly",d:"Clean notes in Slack or email before you close the Zoom window."}].map((f,i)=>(
+                <div key={i} style={{background:"#FAFAFB",borderRadius:9,padding:18,border:"1px solid #EAEAEF"}}>
+                  <div style={{fontSize:22,marginBottom:8}}>{f.i}</div>
+                  <div style={{fontWeight:600,fontSize:13,marginBottom:5,color:"#1A1A1F"}}>{f.t}</div>
+                  <div style={{fontSize:12,color:"#6B6B76",lineHeight:1.6}}>{f.d}</div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         <div style={{background:"#F7F6FF",border:"1px solid #E1DEFB",borderRadius:14,padding:32,textAlign:"center"}}>
           <h2 style={{fontSize:26,fontWeight:800,marginBottom:10,letterSpacing:"-0.02em",color:"#1A1A1F"}}>Stop reconstructing calls from memory</h2>
           <p style={{color:"#52525E",fontSize:14,marginBottom:24}}>Join 500+ founders who let Flo handle the notes while they close the deals.</p>
-          <button style={{background:"#5B4FE8",color:"#fff",padding:"13px 34px",borderRadius:9,border:"none",fontWeight:700,fontSize:15,cursor:"pointer"}}>Fix this today — free for 14 days →</button>
+          <button style={{background:"#5B4FE8",color:"#fff",padding:"13px 34px",borderRadius:9,border:"none",fontWeight:700,fontSize:15,cursor:"pointer"}}>{ctaText} →</button>
           <div style={{marginTop:10,fontSize:11,color:"#8A8A94"}}>No credit card. Cancel anytime.</div>
         </div>
       </div>
@@ -1084,7 +1121,7 @@ function FloV6() {
   );
 }
 
-const PAGE_COMPS = { v1:<FloV1/>, v2:<FloV2/>, v3:<FloV3/>, v4:<FloV4/>, v5:<FloV5/>, v6:<FloV6/> };
+const PAGE_COMPS_STATIC = { v1:<FloV1/>, v2:<FloV2/>, v3:<FloV3/>, v4:<FloV4/>, v5:<FloV5/> };
 
 
 /* ─────────────────────────────────────────────
@@ -1785,7 +1822,7 @@ export default function PageMind() {
                       </div>
                     </div>
                     <div className="v6-chrome-body">
-                      <FloV6/>
+                      <FloV6 decisions={v6Decisions||FALLBACK_V6_DECISIONS}/>
                     </div>
                   </div>
                   <button className="btn-accent" style={{marginTop:12,width:"100%",justifyContent:"center"}} onClick={()=>setModal("v6")}>
@@ -1819,7 +1856,7 @@ export default function PageMind() {
               <button className="pm-modal-close" onClick={()=>setModal(null)}>✕</button>
             </div>
             <div className="pm-modal-body">
-              {PAGE_COMPS[modal]||null}
+              {modal==="v6" ? <FloV6 decisions={v6Decisions||FALLBACK_V6_DECISIONS}/> : (PAGE_COMPS_STATIC[modal]||null)}
             </div>
           </div>
         </div>
@@ -1827,4 +1864,3 @@ export default function PageMind() {
     </>
   );
 }
-
