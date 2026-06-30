@@ -613,11 +613,11 @@ function aggPage(pageId, icpOnly=false) {
 }
 
 const FOUNDER_INSIGHTS = [
-  { icon:"📉", title:"Feature grids ignored above the fold", body:"On all 5 pages, founders spent under 40% of baseline time on feature-list sections. V1's feature grid had the lowest dwell time of any section across the entire experiment.", src:"Cross-page · V1 hero section dwell: 11s (vs 18s baseline)" },
-  { icon:"🏆", title:"Social proof drives longest dwell — on every page", body:"Testimonial and logo sections hit 2.1–2.4× higher dwell time for founders than any other section type. V3's testimonial wall was the single highest-engagement section in the experiment.", src:"V3 testimonial wall: avg 44s · nearest competitor: 26s (V4 pain block)" },
-  { icon:"🎯", title:"Pain-framed headlines produce the highest CTA conversion", body:"V4's scenario headline ('You just had a great investor call. Now what?') drove a 31% founder CTA click rate — 2.6× V1's feature headline. Specificity of the scenario was the decisive variable.", src:"V4 founder CTA: 31% · V1 founder CTA: 12% · delta: +158%" },
-  { icon:"⚡", title:"Screenshot-led pages trigger fastest founder bounce", body:"Pages opening with product UI (V1) saw 28% founder bounce rate. Pages opening with a founder-recognizable scenario dropped to 10–18% bounce. The first sentence is the make-or-break moment.", src:"V1 bounce: 28% · V4 bounce: 10% · V2 bounce: 18%" },
-  { icon:"📖", title:"Specific outcome numbers extend reading depth", body:"V5's before/after and outcome metrics block held founders 1.4× longer than abstract benefit copy. When outcomes were concrete ('5 hrs/week', 'zero missed follow-ups'), scroll depth climbed 16pp vs vague equivalents.", src:"V5 founder scroll: 71% · V1 founder scroll: 55% · delta: +16pp" },
+  { icon:"01", title:"Feature grids ignored above the fold", body:"On all 5 pages, founders spent under 40% of baseline time on feature-list sections. V1's feature grid had the lowest dwell time of any section across the entire experiment.", src:"Cross-page · V1 hero section dwell: 11s (vs 18s baseline)" },
+  { icon:"02", title:"Social proof drives longest dwell — on every page", body:"Testimonial and logo sections hit 2.1–2.4× higher dwell time for founders than any other section type. V3's testimonial wall was the single highest-engagement section in the experiment.", src:"V3 testimonial wall: avg 44s · nearest competitor: 26s (V4 pain block)" },
+  { icon:"03", title:"Pain-framed headlines produce the highest CTA conversion", body:"V4's scenario headline ('You just had a great investor call. Now what?') drove a 31% founder CTA click rate — 2.6× V1's feature headline. Specificity of the scenario was the decisive variable.", src:"V4 founder CTA: 31% · V1 founder CTA: 12% · delta: +158%" },
+  { icon:"04", title:"Screenshot-led pages trigger fastest founder bounce", body:"Pages opening with product UI (V1) saw 28% founder bounce rate. Pages opening with a founder-recognizable scenario dropped to 10–18% bounce. The first sentence is the make-or-break moment.", src:"V1 bounce: 28% · V4 bounce: 10% · V2 bounce: 18%" },
+  { icon:"05", title:"Specific outcome numbers extend reading depth", body:"V5's before/after and outcome metrics block held founders 1.4× longer than abstract benefit copy. When outcomes were concrete ('5 hrs/week', 'zero missed follow-ups'), scroll depth climbed 16pp vs vague equivalents.", src:"V5 founder scroll: 71% · V1 founder scroll: 55% · delta: +16pp" },
 ];
 
 const FALLBACK_V6_DECISIONS = [
@@ -818,16 +818,20 @@ function FloV1() {
         </div>
         <div style={{background:"#111",borderRadius:14,padding:20,marginBottom:52,height:200,display:"flex",alignItems:"center",justifyContent:"center",border:"1px solid #222"}}>
           <div style={{textAlign:"center",color:"#555"}}>
-            <div style={{fontSize:36,marginBottom:6}}>📋</div>
+            <div style={{display:"flex",flexDirection:"column",gap:5,alignItems:"center",marginBottom:10}}>
+              <div style={{width:120,height:8,background:"#333",borderRadius:2}}/>
+              <div style={{width:90,height:8,background:"#2A2A2A",borderRadius:2}}/>
+              <div style={{width:100,height:8,background:"#2A2A2A",borderRadius:2}}/>
+            </div>
             <div style={{fontSize:13}}>Meeting summary — live product view</div>
             <div style={{fontSize:11,marginTop:3,color:"#444"}}>Auto-generated from your last Zoom call</div>
           </div>
         </div>
         <h2 style={{fontSize:26,fontWeight:800,textAlign:"center",marginBottom:32,letterSpacing:"-0.02em"}}>Everything your team needs from every call</h2>
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20,marginBottom:48}}>
-          {[{i:"🎙️",t:"Auto-transcription",d:"Word-for-word transcript of every call, searchable and shareable across your team."},{i:"✅",t:"Action item extraction",d:"Flo identifies every to-do and assigns it to the right person automatically."},{i:"📨",t:"Auto-send summaries",d:"Clean summaries sent to Slack or email immediately after the call ends."},{i:"🔍",t:"Search across calls",d:"Find any decision or commitment from any meeting in seconds."},{i:"🔗",t:"Deep integrations",d:"Works with Notion, Linear, Slack, and your CRM out of the box."},{i:"⚡",t:"Instant setup",d:"Connect your calendar and Flo joins your next call automatically."}].map((f,i)=>(
+          {[{t:"Auto-transcription",d:"Word-for-word transcript of every call, searchable and shareable across your team."},{t:"Action item extraction",d:"Flo identifies every to-do and assigns it to the right person automatically."},{t:"Auto-send summaries",d:"Clean summaries sent to Slack or email immediately after the call ends."},{t:"Search across calls",d:"Find any decision or commitment from any meeting in seconds."},{t:"Deep integrations",d:"Works with Notion, Linear, Slack, and your CRM out of the box."},{t:"Instant setup",d:"Connect your calendar and Flo joins your next call automatically."}].map((f,i)=>(
             <div key={i} style={{background:"#fff",border:"1px solid #E5E7EB",borderRadius:11,padding:22}}>
-              <div style={{fontSize:26,marginBottom:10}}>{f.i}</div>
+              <div style={{width:28,height:28,borderRadius:7,background:"#F4F3FE",color:"#7C6EF8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,marginBottom:12}}>{String(i+1).padStart(2,"0")}</div>
               <div style={{fontWeight:700,fontSize:14,marginBottom:6}}>{f.t}</div>
               <div style={{fontSize:13,color:"#6B7280",lineHeight:1.6}}>{f.d}</div>
             </div>
@@ -936,10 +940,10 @@ function FloV4() {
         <p style={{fontSize:17,color:"#9CA3AF",lineHeight:1.8,marginBottom:44,maxWidth:580}}>The call was good. You felt it. They were interested. But now you're staring at a blank doc, trying to remember what they actually asked you to send over. And which points landed. And who said what.</p>
         <div style={{marginBottom:44}}>
           <div style={{fontSize:10,fontWeight:700,color:"#F59E0B",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:16}}>Sound familiar?</div>
-          {[{i:"💀",p:"The follow-up email you promised went out 3 days late",c:"They went with someone who seemed more on top of things"},{i:"🕳️",p:"Action items from the customer call died in Slack",c:"The feature they asked for never got built. They churned."},{i:"🤦",p:"Your co-founder asked what was decided. You guessed.",c:"The team built the wrong thing for two weeks."}].map((it,i)=>(
+          {[{p:"The follow-up email you promised went out 3 days late",c:"They went with someone who seemed more on top of things"},{p:"Action items from the customer call died in Slack",c:"The feature they asked for never got built. They churned."},{p:"Your co-founder asked what was decided. You guessed.",c:"The team built the wrong thing for two weeks."}].map((it,i)=>(
             <div key={i} style={{marginBottom:12,background:"#13131A",borderRadius:10,padding:18,border:"1px solid #2E2E3E"}}>
               <div style={{display:"flex",gap:14,alignItems:"flex-start"}}>
-                <div style={{fontSize:22}}>{it.i}</div>
+                <div style={{width:8,height:8,borderRadius:"50%",background:"#F59E0B",marginTop:6,flexShrink:0}}/>
                 <div><div style={{fontSize:13.5,fontWeight:600,marginBottom:5}}>{it.p}</div><div style={{fontSize:12.5,color:"#F43F5E"}}>→ {it.c}</div></div>
               </div>
             </div>
@@ -1051,7 +1055,7 @@ function FloV6({ decisions }) {
       </nav>
       <div style={{padding:"72px 48px 52px",maxWidth:820,margin:"0 auto"}}>
         <div style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(91,79,232,0.08)",border:"1px solid #5B4FE8",borderRadius:20,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#5B4FE8",marginBottom:24,letterSpacing:"0.04em"}}>
-          ⚡ USED BY 500+ FOUNDERS FROM YC, TECHSTARS & A16Z PORTFOLIO
+          USED BY 500+ FOUNDERS FROM YC, TECHSTARS & A16Z PORTFOLIO
         </div>
         <h1 style={{fontSize:48,fontWeight:800,lineHeight:1.15,marginBottom:22,letterSpacing:"-0.03em",color:"#1A1A1F"}}>
           {headlineLead && <>{headlineLead}<br/></>}<span style={{color:"#5B4FE8"}}>{headlineEmph}</span>
@@ -1100,9 +1104,9 @@ function FloV6({ decisions }) {
           <div style={{borderTop:"1px solid #EAEAEF",paddingTop:36,marginBottom:44}}>
             <div style={{fontSize:10,fontWeight:700,color:"#8A8A94",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:20}}>How Flo works</div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
-              {[{i:"🎙️",t:"Auto-joins your calls",d:"Connects to your calendar and shows up to every meeting."},{i:"✅",t:"Extracts action items",d:"Every to-do, decision, and commitment pulled out automatically."},{i:"📨",t:"Sends summaries instantly",d:"Clean notes in Slack or email before you close the Zoom window."}].map((f,i)=>(
+              {[{t:"Auto-joins your calls",d:"Connects to your calendar and shows up to every meeting."},{t:"Extracts action items",d:"Every to-do, decision, and commitment pulled out automatically."},{t:"Sends summaries instantly",d:"Clean notes in Slack or email before you close the Zoom window."}].map((f,i)=>(
                 <div key={i} style={{background:"#FAFAFB",borderRadius:9,padding:18,border:"1px solid #EAEAEF"}}>
-                  <div style={{fontSize:22,marginBottom:8}}>{f.i}</div>
+                  <div style={{width:24,height:24,borderRadius:6,background:"#F4F3FE",color:"#5B4FE8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,marginBottom:10}}>{i+1}</div>
                   <div style={{fontWeight:600,fontSize:13,marginBottom:5,color:"#1A1A1F"}}>{f.t}</div>
                   <div style={{fontSize:12,color:"#6B6B76",lineHeight:1.6}}>{f.d}</div>
                 </div>
@@ -1513,7 +1517,7 @@ export default function PageMind() {
 
             {!done?(
               <div className="pm-card"><div className="empty-state">
-                <div className="empty-icon">📊</div>
+                <div className="empty-icon" style={{width:48,height:48,borderRadius:"50%",border:`1.5px dashed ${T.dim}`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto",fontSize:18,color:T.dim}}>—</div>
                 <div className="empty-title">No data yet</div>
                 <div className="empty-sub">Run the experiment first to unlock behavioral analysis.</div>
                 <button className="btn-accent" onClick={()=>setTab("simulation")}>Go to experiment →</button>
@@ -1530,7 +1534,7 @@ export default function PageMind() {
                     <div style={{fontSize:11,fontWeight:700,color:T.icp,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:10,fontFamily:"'DM Mono',monospace"}}>Cross-page patterns — Startup Founders</div>
                     {FOUNDER_INSIGHTS.map((ins,i)=>(
                       <div key={i} className="insight-card">
-                        <div className="insight-tag">{ins.icon} Pattern {i+1} — {ins.title}</div>
+                        <div className="insight-tag">Pattern {i+1} — {ins.title}</div>
                         <div className="insight-text">{ins.body}</div>
                         <div className="insight-src">{ins.src}</div>
                       </div>
@@ -1607,7 +1611,7 @@ export default function PageMind() {
 
             {!done?(
               <div className="pm-card"><div className="empty-state">
-                <div className="empty-icon">🏆</div>
+                <div className="empty-icon" style={{width:48,height:48,borderRadius:"50%",border:`1.5px dashed ${T.dim}`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto",fontSize:18,color:T.dim}}>—</div>
                 <div className="empty-title">No results yet</div>
                 <div className="empty-sub">Run the experiment to see the leaderboard.</div>
                 <button className="btn-accent" onClick={()=>setTab("simulation")}>Go to experiment →</button>
@@ -1704,7 +1708,7 @@ export default function PageMind() {
                           setV6Ready(true); setV6Loading(false); setTab("v6");
                         }
                       }}>
-                      {v6Loading?<><div className="pm-spin"/>Calling Claude with founder event data…</>:"✦ Generate V6 — The Evolved Page"}
+                      {v6Loading?<><div className="pm-spin"/>Calling Claude with founder event data…</>:"Generate V6 — The Evolved Page"}
                     </button>
                     <div style={{marginTop:8,fontSize:12,color:T.muted}}>Claude receives the raw founder event log and picks the best-tested element per slot — live</div>
                   </div>
@@ -1732,7 +1736,7 @@ export default function PageMind() {
 
             {!v6Ready?(
               <div className="pm-card"><div className="empty-state">
-                <div className="empty-icon">✦</div>
+                <div className="empty-icon" style={{width:48,height:48,borderRadius:"50%",border:`1.5px dashed ${T.dim}`,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto",fontSize:18,color:T.dim}}>—</div>
                 <div className="empty-title">V6 hasn't been generated yet</div>
                 <div className="empty-sub">Run the experiment and generate V6 from the leaderboard to unlock this view.</div>
                 <button className="btn-accent" onClick={()=>setTab(done?"leaderboard":"simulation")}>
@@ -1751,7 +1755,7 @@ export default function PageMind() {
                         <span className="pm-tag" style={{color:T.green,borderColor:T.green,background:T.greenDim}}>✓ Live Claude API call</span>
                       )}
                       {v6Source==="fallback"&&(
-                        <span className="pm-tag" style={{color:T.amber,borderColor:T.amber,background:"rgba(217,119,6,0.08)"}}>⚠ Fallback reasoning</span>
+                        <span className="pm-tag" style={{color:T.amber,borderColor:T.amber,background:"rgba(217,119,6,0.08)"}}>Fallback reasoning</span>
                       )}
                     </div>
                     <div style={{fontSize:12,color:T.muted,marginBottom:v6Error?6:18,lineHeight:1.6}}>Every element in V6 is traceable to a specific pattern in founder behavior. This is a synthesis — not the overall winning page.</div>
@@ -1800,7 +1804,7 @@ export default function PageMind() {
                     <div className="pm-eyebrow icp" style={{marginBottom:12}}>Founder patterns that drove V6</div>
                     {FOUNDER_INSIGHTS.map((ins,i)=>(
                       <div key={i} style={{padding:"9px 0",borderBottom:i<FOUNDER_INSIGHTS.length-1?`1px solid ${T.border}`:"none"}}>
-                        <div style={{fontSize:12.5,fontWeight:600,marginBottom:2}}>{ins.icon} {ins.title}</div>
+                        <div style={{fontSize:12.5,fontWeight:600,marginBottom:2}}>{ins.title}</div>
                         <div style={{fontSize:11,color:T.muted}}>{ins.src}</div>
                       </div>
                     ))}
@@ -1818,7 +1822,7 @@ export default function PageMind() {
                       </div>
                       <div className="v6-chrome-url">
                         <span>flo.ai</span>
-                        <span style={{fontSize:10,padding:"1px 7px",background:T.accentDim,color:T.accent,borderRadius:3,fontWeight:600}}>✦ AI Generated</span>
+                        <span style={{fontSize:10,padding:"1px 7px",background:T.accentDim,color:T.accent,borderRadius:3,fontWeight:600}}>AI Generated</span>
                       </div>
                     </div>
                     <div className="v6-chrome-body">
@@ -1844,7 +1848,7 @@ export default function PageMind() {
             <div className="pm-modal-head">
               <div>
                 {modal==="v6"?(
-                  <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:16,fontWeight:800}}>V6 — The Evolved Page <span style={{color:T.accent}}>✦</span></div>
+                  <div style={{fontFamily:"'Bricolage Grotesque',sans-serif",fontSize:16,fontWeight:800}}>V6 — The Evolved Page</div>
                 ):(()=>{
                   const pg=PAGES.find(p=>p.id===modal);
                   return pg?(<>
