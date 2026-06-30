@@ -491,7 +491,116 @@ body {
   display: flex; align-items: flex-start; gap: 8px;
 }
 .icp-banner-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── FLO LANDING PAGE CLASSES ── */
+.flo-nav { padding: 18px 48px; }
+.flo-body { padding-left: 48px; padding-right: 48px; }
+.flo-grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; }
+.flo-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+  .flo-nav { padding: 14px 20px !important; }
+  .flo-body { padding-left: 20px !important; padding-right: 20px !important; }
+  .flo-body h1 { font-size: 30px !important; line-height: 1.2 !important; }
+  .flo-body h2 { font-size: 20px !important; }
+  .flo-body p { font-size: 14px !important; }
+  .flo-grid-2, .flo-grid-3 { grid-template-columns: 1fr !important; }
+
+  /* Nav */
+  .pm-nav { padding: 0 16px; gap: 0; }
+  .pm-logo { margin-right: 12px; font-size: 15px; }
+  .pm-tabs {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; gap: 2px;
+  }
+  .pm-tabs::-webkit-scrollbar { display: none; }
+  .pm-tab { padding: 6px 10px; font-size: 12px; white-space: nowrap; }
+  .pm-status { display: none; }
+
+  /* Main layout */
+  .pm-main { padding: 20px 16px; }
+  .pm-h1 { font-size: 20px; }
+  .pm-sub { font-size: 12px; }
+
+  /* All grids collapse to 1 column */
+  .g5, .g3, .g2, .g2-3, .g3-2 {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Page cards - 2 col on mobile */
+  .g5 { grid-template-columns: repeat(2,1fr) !important; }
+
+  /* Cards */
+  .pm-card { padding: 14px; }
+  .pm-card-tight { padding: 10px 12px; }
+
+  /* Heatmap label truncation */
+  .hm-label { width: 90px; font-size: 10.5px; }
+
+  /* Feed */
+  .feed { height: 120px; }
+
+  /* Rank rows */
+  .rank-row { padding: 10px 12px; gap: 10px; }
+  .rank-num { font-size: 15px; width: 22px; }
+
+  /* Decision log */
+  .dec-body { padding: 10px 12px; }
+  .dec-el { font-size: 12px; }
+  .dec-quote-box { font-size: 11.5px; padding: 8px 10px; }
+  .dec-reason { font-size: 11px; }
+
+  /* V6 chrome */
+  .v6-chrome-body { height: 380px; }
+  .v6-chrome-url { font-size: 10px; }
+
+  /* Sub tabs */
+  .pm-sub-tabs { gap: 4px; }
+  .pm-sub-tab { padding: 5px 10px; font-size: 11px; }
+
+  /* Insight cards */
+  .insight-text { font-size: 12px; }
+  .insight-src { font-size: 10px; }
+
+  /* Empty state */
+  .empty-state { padding: 40px 0; }
+  .empty-title { font-size: 16px; }
+
+  /* Buttons */
+  .btn-accent, .btn-ghost { padding: 9px 16px; font-size: 12px; }
+
+  /* Persona pills wrap */
+  .persona-pill { font-size: 10px; padding: 3px 7px; }
+}
+
+@media (max-width: 480px) {
+  /* Phones - single column everything */
+  .g5 { grid-template-columns: 1fr !important; }
+  .pm-h1 { font-size: 18px; }
+  .pm-tab { font-size: 11px; padding: 5px 8px; }
+
+  /* Landing page modals inner content — override 48px side padding */
+  .pm-modal-body div[style*="48px"] {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  .pm-modal-body nav[style*="48px"] {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  /* Grids inside landing pages */
+  .pm-modal-body [style*="repeat(2,1fr)"],
+  .pm-modal-body [style*="repeat(3,1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Large hero font sizes inside modals */
+  .pm-modal-body h1 { font-size: 32px !important; }
+  .pm-modal-body h2 { font-size: 22px !important; }
+}
 `;
+
 
 /* ─────────────────────────────────────────────
    DATA
@@ -799,14 +908,14 @@ function hydrateDecisions(decisions) {
 function FloV1() {
   return (
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#F9FAFB",color:"#111",minHeight:"100vh"}}>
-      <nav style={{background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"0 48px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <nav className="flo-nav" style={{background:"#fff",borderBottom:"1px solid #E5E7EB",padding:"0 48px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <span style={{fontWeight:800,fontSize:19,color:"#7C6EF8",letterSpacing:"-0.03em"}}>flo</span>
         <div style={{display:"flex",gap:28,fontSize:13,color:"#6B7280"}}>
           {["Features","Integrations","Pricing","Docs"].map(t=><span key={t} style={{cursor:"pointer"}}>{t}</span>)}
         </div>
         <button style={{background:"#7C6EF8",color:"#fff",padding:"9px 20px",borderRadius:8,border:"none",fontWeight:600,fontSize:13,cursor:"pointer"}}>Start free →</button>
       </nav>
-      <div style={{padding:"72px 48px 56px",maxWidth:960,margin:"0 auto"}}>
+      <div className="flo-body" style={{padding:"72px 48px 56px",maxWidth:960,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
           <div style={{display:"inline-block",background:"#EEF2FF",color:"#7C6EF8",padding:"4px 12px",borderRadius:20,fontSize:11,fontWeight:700,letterSpacing:"0.06em",marginBottom:18}}>AI-POWERED MEETING NOTES</div>
           <h1 style={{fontSize:50,fontWeight:800,lineHeight:1.1,marginBottom:18,letterSpacing:"-0.03em"}}>Your meetings,<br/>documented automatically</h1>
@@ -828,7 +937,7 @@ function FloV1() {
           </div>
         </div>
         <h2 style={{fontSize:26,fontWeight:800,textAlign:"center",marginBottom:32,letterSpacing:"-0.02em"}}>Everything your team needs from every call</h2>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20,marginBottom:48}}>
+        <div className="flo-grid-3" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:20,marginBottom:48}}>
           {[{t:"Auto-transcription",d:"Word-for-word transcript of every call, searchable and shareable across your team."},{t:"Action item extraction",d:"Flo identifies every to-do and assigns it to the right person automatically."},{t:"Auto-send summaries",d:"Clean summaries sent to Slack or email immediately after the call ends."},{t:"Search across calls",d:"Find any decision or commitment from any meeting in seconds."},{t:"Deep integrations",d:"Works with Notion, Linear, Slack, and your CRM out of the box."},{t:"Instant setup",d:"Connect your calendar and Flo joins your next call automatically."}].map((f,i)=>(
             <div key={i} style={{background:"#fff",border:"1px solid #E5E7EB",borderRadius:11,padding:22}}>
               <div style={{width:28,height:28,borderRadius:7,background:"#F4F3FE",color:"#7C6EF8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,marginBottom:12}}>{String(i+1).padStart(2,"0")}</div>
@@ -851,11 +960,11 @@ function FloV1() {
 function FloV2() {
   return (
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#0C0C14",color:"#E8E8F0",minHeight:"100vh"}}>
-      <nav style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #1E1E2E"}}>
+      <nav className="flo-nav" style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #1E1E2E"}}>
         <span style={{fontWeight:800,fontSize:19,color:"#F72585",letterSpacing:"-0.03em"}}>flo</span>
         <button style={{background:"transparent",color:"#E8E8F0",padding:"8px 18px",borderRadius:7,border:"1px solid #2E2E3E",fontWeight:600,fontSize:13,cursor:"pointer"}}>Try free →</button>
       </nav>
-      <div style={{padding:"80px 48px",maxWidth:760,margin:"0 auto"}}>
+      <div className="flo-body" style={{padding:"80px 48px",maxWidth:760,margin:"0 auto"}}>
         <h1 style={{fontSize:54,fontWeight:800,lineHeight:1.05,marginBottom:22,letterSpacing:"-0.03em"}}>Stop leaving meetings<br/><span style={{color:"#F72585"}}>wondering what just<br/>happened.</span></h1>
         <p style={{fontSize:17,color:"#9CA3AF",lineHeight:1.8,marginBottom:40,maxWidth:560}}>You just finished a 45-minute investor call. You remember the vibe — the energy was good. But the specific objections they raised? The follow-ups they asked for? Gone before you open your laptop.</p>
         <div style={{background:"#13131A",border:"1px solid #2E2E3E",borderLeft:"3px solid #F72585",borderRadius:"0 10px 10px 0",padding:"22px 26px",marginBottom:40}}>
@@ -888,11 +997,11 @@ function FloV2() {
 function FloV3() {
   return (
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#fff",color:"#111",minHeight:"100vh"}}>
-      <nav style={{padding:"0 48px",height:58,display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #E5E7EB"}}>
+      <nav className="flo-nav" style={{padding:"0 48px",height:58,display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #E5E7EB"}}>
         <span style={{fontWeight:800,fontSize:19,letterSpacing:"-0.03em"}}>flo</span>
         <button style={{background:"#111",color:"#fff",padding:"8px 18px",borderRadius:7,border:"none",fontWeight:600,fontSize:13,cursor:"pointer"}}>Join them →</button>
       </nav>
-      <div style={{padding:"56px 48px",maxWidth:920,margin:"0 auto"}}>
+      <div className="flo-body" style={{padding:"56px 48px",maxWidth:920,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:44}}>
           <div style={{display:"flex",gap:7,justifyContent:"center",alignItems:"center",marginBottom:20}}>
             {["YC","Techstars","a16z","First Round","Sequoia"].map(l=><div key={l} style={{background:"#F3F4F6",padding:"3px 10px",borderRadius:5,fontSize:11,fontWeight:700,color:"#374151"}}>{l}</div>)}
@@ -906,7 +1015,7 @@ function FloV3() {
           </div>
           <button style={{background:"#111",color:"#fff",padding:"13px 30px",borderRadius:9,border:"none",fontWeight:700,fontSize:15,cursor:"pointer"}}>Join them — free for 14 days</button>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:18,marginBottom:44}}>
+        <div className="flo-grid-2" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:18,marginBottom:44}}>
           {[{q:'"Flo is the only tool I actually use every day. It\'s made me 10× better at follow-through with investors."',n:"Marcus Webb",r:"CEO, Stackr (Seed, $2.4M)"},{q:'"We were losing deals because action items fell through the cracks. Flo fixed that in week one."',n:"Priya Nair",r:"Founder, Lumos (YC W24)"},{q:'"The summaries Flo sends are better than anything I could write myself. My whole team uses them as source of truth."',n:"David Kim",r:"Co-founder, Relay (Series A)"},{q:'"I do 8 calls a day. Without Flo I\'d lose my mind. Nothing falls through the cracks."',n:"Ana Torres",r:"Founder, Spark (Techstars \'23)"}].map((t,i)=>(
             <div key={i} style={{background:"#F9FAFB",border:"1px solid #E5E7EB",borderRadius:11,padding:22}}>
               <div style={{fontSize:22,color:"#D1D5DB",marginBottom:6,lineHeight:1}}>"</div>
@@ -931,11 +1040,11 @@ function FloV3() {
 function FloV4() {
   return (
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#08080E",color:"#E8E8F0",minHeight:"100vh"}}>
-      <nav style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <nav className="flo-nav" style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <span style={{fontWeight:800,fontSize:19,color:"#F59E0B",letterSpacing:"-0.03em"}}>flo</span>
         <button style={{background:"#F59E0B",color:"#111",padding:"8px 18px",borderRadius:7,border:"none",fontWeight:700,fontSize:13,cursor:"pointer"}}>Fix this today</button>
       </nav>
-      <div style={{padding:"76px 48px",maxWidth:760,margin:"0 auto"}}>
+      <div className="flo-body" style={{padding:"76px 48px",maxWidth:760,margin:"0 auto"}}>
         <h1 style={{fontSize:56,fontWeight:800,lineHeight:1.05,marginBottom:28,letterSpacing:"-0.03em"}}>You just had a great<br/><span style={{color:"#F59E0B"}}>investor call.</span><br/>Now what?</h1>
         <p style={{fontSize:17,color:"#9CA3AF",lineHeight:1.8,marginBottom:44,maxWidth:580}}>The call was good. You felt it. They were interested. But now you're staring at a blank doc, trying to remember what they actually asked you to send over. And which points landed. And who said what.</p>
         <div style={{marginBottom:44}}>
@@ -952,7 +1061,7 @@ function FloV4() {
         <div style={{background:"#13131A",border:"1px solid #2E2E3E",borderTop:"3px solid #F59E0B",borderRadius:11,padding:28,marginBottom:36}}>
           <div style={{fontSize:10,fontWeight:700,color:"#F59E0B",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:14}}>Flo fixes this</div>
           <p style={{fontSize:15,color:"#D1D5DB",lineHeight:1.75,marginBottom:20}}>Flo joins every call automatically. It captures the full transcript, pulls out every action item, and sends a clean summary to you and your team the moment the call ends. Before you've even closed the Zoom window.</p>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
+          <div className="flo-grid-3" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10}}>
             {["Works silently in the background","Summary in your inbox instantly","Action items assigned automatically"].map((f,i)=>(
               <div key={i} style={{background:"#08080E",borderRadius:7,padding:"10px 12px",fontSize:12,color:"#9CA3AF"}}>✓ {f}</div>
             ))}
@@ -968,11 +1077,11 @@ function FloV4() {
 function FloV5() {
   return (
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#F8FAFC",color:"#111",minHeight:"100vh"}}>
-      <nav style={{background:"#fff",padding:"0 48px",height:58,display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #E5E7EB"}}>
+      <nav className="flo-nav" style={{background:"#fff",padding:"0 48px",height:58,display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #E5E7EB"}}>
         <span style={{fontWeight:800,fontSize:19,color:"#60A5FA",letterSpacing:"-0.03em"}}>flo</span>
         <button style={{background:"#60A5FA",color:"#fff",padding:"8px 18px",borderRadius:7,border:"none",fontWeight:600,fontSize:13,cursor:"pointer"}}>See what changes →</button>
       </nav>
-      <div style={{padding:"76px 48px",maxWidth:920,margin:"0 auto"}}>
+      <div className="flo-body" style={{padding:"76px 48px",maxWidth:920,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:56}}>
           <h1 style={{fontSize:52,fontWeight:800,lineHeight:1.05,marginBottom:22,letterSpacing:"-0.03em"}}>Get <span style={{color:"#60A5FA"}}>5 hours a week</span> back.<br/>Ship more. Miss nothing.</h1>
           <p style={{fontSize:17,color:"#6B7280",maxWidth:500,margin:"0 auto 36px",lineHeight:1.7}}>Flo handles everything after your calls so you can focus on what you actually started a company to do.</p>
@@ -1048,12 +1157,12 @@ function FloV6({ decisions }) {
 
   return (
     <div style={{fontFamily:"'DM Sans',sans-serif",background:"#FFFFFF",color:"#1A1A1F",minHeight:"100vh"}}>
-      <nav style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #EAEAEF"}}>
+      <nav className="flo-nav" style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #EAEAEF"}}>
         <span style={{fontWeight:800,fontSize:19,color:"#5B4FE8",letterSpacing:"-0.03em"}}>flo</span>
         <div style={{display:"flex",gap:24,fontSize:13,color:"#6B6B76"}}>{["How it works","Pricing"].map(t=><span key={t}>{t}</span>)}</div>
         <button style={{background:"#5B4FE8",color:"#fff",padding:"9px 20px",borderRadius:8,border:"none",fontWeight:700,fontSize:13,cursor:"pointer"}}>{ctaText.split(" — ")[0] || "Fix this today"} — free</button>
       </nav>
-      <div style={{padding:"72px 48px 52px",maxWidth:820,margin:"0 auto"}}>
+      <div className="flo-body" style={{padding:"72px 48px 52px",maxWidth:820,margin:"0 auto"}}>
         <div style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(91,79,232,0.08)",border:"1px solid #5B4FE8",borderRadius:20,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#5B4FE8",marginBottom:24,letterSpacing:"0.04em"}}>
           USED BY 500+ FOUNDERS FROM YC, TECHSTARS & A16Z PORTFOLIO
         </div>
@@ -1081,14 +1190,14 @@ function FloV6({ decisions }) {
       </div>
 
       {/* Social proof — content slot chosen by Claude (default: V3 testimonial wall) */}
-      <div style={{padding:"0 48px 52px",maxWidth:820,margin:"0 auto"}}>
+      <div className="flo-body" style={{padding:"0 48px 52px",maxWidth:820,margin:"0 auto"}}>
         <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:22,flexWrap:"wrap"}}>
           <span style={{fontSize:12,color:"#8A8A94",fontWeight:500}}>Trusted by founders from</span>
           {["YC","Techstars","a16z","First Round"].map(l=>(
             <div key={l} style={{background:"#F7F7F9",border:"1px solid #EAEAEF",padding:"3px 10px",borderRadius:5,fontSize:11,fontWeight:700,color:"#52525E"}}>{l}</div>
           ))}
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:14,marginBottom:44}}>
+        <div className="flo-grid-2" style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:14,marginBottom:44}}>
           {[{q:"Flo's summaries are better than anything I could write myself. My team treats them as source of truth.",n:"Priya Nair",r:"Founder, Lumos (YC W24)"},{q:"I do 8 calls a day. Without Flo I'd lose my mind. Nothing falls through the cracks anymore.",n:"Ana Torres",r:"Founder, Spark (Techstars '23)"},{q:"We were losing deals because action items fell through the cracks. Flo fixed that in week one.",n:"Marcus Webb",r:"CEO, Stackr (Seed, $2.4M)"},{q:"The anxiety isn't the meeting. It's the 20 minutes after. Flo eliminated that entirely.",n:"David Kim",r:"Co-founder, Relay (Series A)"}].map((t,i)=>(
             <div key={i} style={{background:"#FAFAFB",border:"1px solid #EAEAEF",borderRadius:10,padding:20}}>
               <p style={{fontSize:13,color:"#33333D",lineHeight:1.7,marginBottom:12,fontStyle:"italic"}}>"{t.q}"</p>
@@ -1103,7 +1212,7 @@ function FloV6({ decisions }) {
         {!showFeatureGridInHero && (
           <div style={{borderTop:"1px solid #EAEAEF",paddingTop:36,marginBottom:44}}>
             <div style={{fontSize:10,fontWeight:700,color:"#8A8A94",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:20}}>How Flo works</div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
+            <div className="flo-grid-3" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
               {[{t:"Auto-joins your calls",d:"Connects to your calendar and shows up to every meeting."},{t:"Extracts action items",d:"Every to-do, decision, and commitment pulled out automatically."},{t:"Sends summaries instantly",d:"Clean notes in Slack or email before you close the Zoom window."}].map((f,i)=>(
                 <div key={i} style={{background:"#FAFAFB",borderRadius:9,padding:18,border:"1px solid #EAEAEF"}}>
                   <div style={{width:24,height:24,borderRadius:6,background:"#F4F3FE",color:"#5B4FE8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,marginBottom:10}}>{i+1}</div>
