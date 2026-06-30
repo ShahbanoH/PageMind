@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
-  AreaChart, Area, LineChart, Line, BarChart, Bar, Cell,
-  XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, ReferenceLine
+  LineChart, Line, BarChart, Bar, Cell,
+  XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
 
 /* ─────────────────────────────────────────────
@@ -337,26 +337,38 @@ body {
 
 /* ── DECISION LOG ── */
 .dec-item {
-  display: flex; gap: 12px;
-  padding: 13px 0;
-  border-bottom: 1px solid ${T.border};
+  display: flex; gap: 0;
+  margin-bottom: 12px;
+  border: 1px solid ${T.border};
+  border-radius: 10px;
+  overflow: hidden;
 }
-.dec-item:last-child { border-bottom: none; }
-.dec-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-.dec-el { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.dec-item:last-child { margin-bottom: 0; }
+.dec-stripe { width: 5px; flex-shrink: 0; }
+.dec-body { flex: 1; padding: 13px 15px; }
+.dec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.dec-el { font-size: 13px; font-weight: 700; }
 .dec-pill {
-  display: inline-flex; align-items: center;
-  padding: 1px 7px; border-radius: 4px;
-  font-size: 10px; font-weight: 700;
-  border: 1px solid; vertical-align: middle;
-  margin-left: 6px; letter-spacing: 0.04em;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px;
+  font-size: 10.5px; font-weight: 700;
+  border: 1px solid; letter-spacing: 0.02em;
 }
-.dec-quote {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px; color: ${T.muted};
-  margin-bottom: 4px; line-height: 1.5;
+.dec-quote-box {
+  background: ${T.raised};
+  border-radius: 7px;
+  padding: 9px 12px;
+  margin-bottom: 9px;
+  font-size: 12.5px; color: ${T.text};
+  line-height: 1.55;
+  border-left: 2.5px solid;
 }
-.dec-reason { font-size: 12px; color: ${T.text}; line-height: 1.6; }
+.dec-why-row { display: flex; gap: 7px; }
+.dec-why-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: ${T.muted}; flex-shrink: 0; padding-top: 1px; width: 32px;
+}
+.dec-reason { font-size: 12px; color: ${T.muted}; line-height: 1.6; flex: 1; }
 
 /* ── MINI SPARKBAR ── */
 .sparkbar { display: flex; align-items: flex-end; gap: 2px; height: 28px; }
@@ -511,39 +523,39 @@ const BEH = {
     v5:{ scroll:71, bounce:20, cta:22, hero:1.2, s2:1.4, s3:1.0, s4:1.3, s5:1.1 },
   },
   enterprise: {
-    v1:{ scroll:92, bounce:8,  cta:6,  hero:1.2, s2:1.8, s3:1.5, s4:2.0, s5:0.4 },
-    v2:{ scroll:42, bounce:45, cta:3,  hero:0.7, s2:0.4, s3:0.5, s4:0.8, s5:0.3 },
-    v3:{ scroll:78, bounce:15, cta:5,  hero:1.0, s2:1.3, s3:1.0, s4:1.6, s5:0.4 },
-    v4:{ scroll:55, bounce:32, cta:4,  hero:0.5, s2:0.6, s3:0.8, s4:1.0, s5:0.3 },
-    v5:{ scroll:68, bounce:22, cta:5,  hero:0.9, s2:1.1, s3:1.4, s4:0.7, s5:0.4 },
+    v1:{ scroll:92, bounce:6,  cta:11, hero:1.2, s2:1.8, s3:1.5, s4:2.0, s5:0.7 },
+    v2:{ scroll:38, bounce:52, cta:2,  hero:0.6, s2:0.3, s3:0.4, s4:0.7, s5:0.2 },
+    v3:{ scroll:80, bounce:13, cta:8,  hero:1.0, s2:1.3, s3:1.0, s4:1.6, s5:0.5 },
+    v4:{ scroll:50, bounce:38, cta:4,  hero:0.5, s2:0.6, s3:0.8, s4:1.0, s5:0.3 },
+    v5:{ scroll:65, bounce:24, cta:6,  hero:0.9, s2:1.1, s3:1.4, s4:0.7, s5:0.4 },
   },
   freelancer: {
-    v1:{ scroll:65, bounce:24, cta:9,  hero:1.0, s2:1.2, s3:1.0, s4:0.9, s5:0.8 },
-    v2:{ scroll:60, bounce:26, cta:11, hero:1.1, s2:1.0, s3:1.2, s4:0.9, s5:0.9 },
-    v3:{ scroll:58, bounce:30, cta:8,  hero:0.8, s2:0.7, s3:0.9, s4:1.0, s5:0.7 },
-    v4:{ scroll:72, bounce:19, cta:14, hero:1.3, s2:1.1, s3:1.2, s4:1.0, s5:1.0 },
-    v5:{ scroll:70, bounce:20, cta:13, hero:1.2, s2:1.3, s3:1.1, s4:1.0, s5:1.0 },
+    v1:{ scroll:62, bounce:26, cta:7,  hero:1.0, s2:1.2, s3:1.0, s4:0.9, s5:0.7 },
+    v2:{ scroll:58, bounce:28, cta:9,  hero:1.1, s2:1.0, s3:1.2, s4:0.9, s5:0.8 },
+    v3:{ scroll:55, bounce:32, cta:6,  hero:0.8, s2:0.7, s3:0.9, s4:1.0, s5:0.6 },
+    v4:{ scroll:76, bounce:16, cta:18, hero:1.4, s2:1.2, s3:1.3, s4:1.1, s5:1.2 },
+    v5:{ scroll:74, bounce:17, cta:16, hero:1.3, s2:1.4, s3:1.2, s4:1.0, s5:1.1 },
   },
   student: {
-    v1:{ scroll:80, bounce:12, cta:2,  hero:0.8, s2:1.1, s3:1.3, s4:0.6, s5:0.2 },
-    v2:{ scroll:55, bounce:35, cta:2,  hero:0.9, s2:0.7, s3:0.6, s4:0.5, s5:0.2 },
-    v3:{ scroll:50, bounce:38, cta:1,  hero:0.7, s2:0.5, s3:0.6, s4:0.8, s5:0.2 },
-    v4:{ scroll:45, bounce:42, cta:1,  hero:0.6, s2:0.5, s3:0.4, s4:0.7, s5:0.2 },
-    v5:{ scroll:62, bounce:28, cta:2,  hero:1.0, s2:0.9, s3:0.8, s4:0.7, s5:0.2 },
+    v1:{ scroll:84, bounce:9,  cta:3,  hero:0.8, s2:1.2, s3:1.4, s4:0.6, s5:0.2 },
+    v2:{ scroll:48, bounce:42, cta:1,  hero:0.9, s2:0.6, s3:0.5, s4:0.4, s5:0.1 },
+    v3:{ scroll:44, bounce:46, cta:1,  hero:0.7, s2:0.4, s3:0.5, s4:0.8, s5:0.1 },
+    v4:{ scroll:38, bounce:50, cta:1,  hero:0.6, s2:0.4, s3:0.3, s4:0.7, s5:0.1 },
+    v5:{ scroll:60, bounce:30, cta:2,  hero:1.0, s2:0.9, s3:0.8, s4:0.7, s5:0.2 },
   },
   indie: {
-    v1:{ scroll:68, bounce:22, cta:14, hero:0.9, s2:1.0, s3:1.1, s4:1.2, s5:0.9 },
-    v2:{ scroll:62, bounce:25, cta:12, hero:1.0, s2:0.9, s3:1.0, s4:0.8, s5:0.8 },
-    v3:{ scroll:60, bounce:27, cta:10, hero:0.8, s2:0.7, s3:0.9, s4:1.0, s5:0.7 },
-    v4:{ scroll:74, bounce:18, cta:16, hero:1.2, s2:1.1, s3:1.0, s4:1.1, s5:1.0 },
-    v5:{ scroll:76, bounce:16, cta:18, hero:1.3, s2:1.2, s3:1.1, s4:1.0, s5:1.1 },
+    v1:{ scroll:65, bounce:24, cta:10, hero:0.9, s2:1.0, s3:1.1, s4:1.2, s5:0.8 },
+    v2:{ scroll:58, bounce:28, cta:8,  hero:1.0, s2:0.9, s3:1.0, s4:0.8, s5:0.7 },
+    v3:{ scroll:56, bounce:30, cta:7,  hero:0.8, s2:0.7, s3:0.9, s4:1.0, s5:0.6 },
+    v4:{ scroll:80, bounce:14, cta:22, hero:1.4, s2:1.3, s3:1.2, s4:1.3, s5:1.3 },
+    v5:{ scroll:82, bounce:12, cta:24, hero:1.5, s2:1.4, s3:1.3, s4:1.2, s5:1.4 },
   },
   vc: {
-    v1:{ scroll:48, bounce:40, cta:1,  hero:0.7, s2:0.8, s3:0.6, s4:0.7, s5:0.1 },
-    v2:{ scroll:35, bounce:55, cta:1,  hero:0.5, s2:0.3, s3:0.4, s4:0.6, s5:0.1 },
-    v3:{ scroll:65, bounce:28, cta:2,  hero:1.1, s2:1.4, s3:1.0, s4:1.6, s5:0.2 },
-    v4:{ scroll:40, bounce:50, cta:1,  hero:0.6, s2:0.5, s3:0.7, s4:0.5, s5:0.1 },
-    v5:{ scroll:52, bounce:38, cta:2,  hero:0.9, s2:0.8, s3:1.2, s4:0.6, s5:0.2 },
+    v1:{ scroll:42, bounce:46, cta:1,  hero:0.7, s2:0.8, s3:0.6, s4:0.7, s5:0.1 },
+    v2:{ scroll:28, bounce:64, cta:0,  hero:0.4, s2:0.2, s3:0.3, s4:0.5, s5:0.1 },
+    v3:{ scroll:72, bounce:20, cta:4,  hero:1.1, s2:1.5, s3:1.1, s4:1.8, s5:0.3 },
+    v4:{ scroll:34, bounce:58, cta:1,  hero:0.5, s2:0.4, s3:0.6, s4:0.4, s5:0.1 },
+    v5:{ scroll:48, bounce:42, cta:2,  hero:0.9, s2:0.8, s3:1.3, s4:0.6, s5:0.2 },
   },
 };
 
@@ -730,7 +742,23 @@ Analyze the dwell times, scroll depth, bounce rate, and CTA rates above. Pick th
   if (!textBlock) throw new Error("No text in response");
 
   const cleaned = textBlock.text.replace(/```json|```/g, "").trim();
-  const parsed = JSON.parse(cleaned);
+  let parsed;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch {
+    throw new Error("Claude's response wasn't valid JSON");
+  }
+
+  const REQUIRED_SLOTS = ["headline", "subtext", "socialProof", "cta", "outcomeStrip", "featureGrid"];
+  if (!Array.isArray(parsed.decisions)) {
+    throw new Error("Response missing a decisions array");
+  }
+  const slotsPresent = parsed.decisions.map(d => d.slot);
+  const missing = REQUIRED_SLOTS.filter(s => !slotsPresent.includes(s));
+  if (missing.length) {
+    throw new Error(`Response missing slots: ${missing.join(", ")}`);
+  }
+
   return parsed.decisions;
 }
 
@@ -986,70 +1014,70 @@ function FloV5() {
 
 function FloV6() {
   return (
-    <div style={{fontFamily:"'DM Sans',sans-serif",background:"#08080E",color:"#E8E8F0",minHeight:"100vh"}}>
-      <nav style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #1E1E2E"}}>
-        <span style={{fontWeight:800,fontSize:19,color:"#7C6EF8",letterSpacing:"-0.03em"}}>flo</span>
-        <div style={{display:"flex",gap:24,fontSize:13,color:"#52526E"}}>{["How it works","Pricing"].map(t=><span key={t}>{t}</span>)}</div>
-        <button style={{background:"#7C6EF8",color:"#fff",padding:"9px 20px",borderRadius:8,border:"none",fontWeight:700,fontSize:13,cursor:"pointer"}}>Fix this today — free</button>
+    <div style={{fontFamily:"'DM Sans',sans-serif",background:"#FFFFFF",color:"#1A1A1F",minHeight:"100vh"}}>
+      <nav style={{padding:"18px 48px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid #EAEAEF"}}>
+        <span style={{fontWeight:800,fontSize:19,color:"#5B4FE8",letterSpacing:"-0.03em"}}>flo</span>
+        <div style={{display:"flex",gap:24,fontSize:13,color:"#6B6B76"}}>{["How it works","Pricing"].map(t=><span key={t}>{t}</span>)}</div>
+        <button style={{background:"#5B4FE8",color:"#fff",padding:"9px 20px",borderRadius:8,border:"none",fontWeight:700,fontSize:13,cursor:"pointer"}}>Fix this today — free</button>
       </nav>
       <div style={{padding:"72px 48px 52px",maxWidth:820,margin:"0 auto"}}>
-        <div style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(124,110,248,0.1)",border:"1px solid #7C6EF8",borderRadius:20,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#7C6EF8",marginBottom:24,letterSpacing:"0.04em"}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(91,79,232,0.08)",border:"1px solid #5B4FE8",borderRadius:20,padding:"4px 12px",fontSize:11,fontWeight:700,color:"#5B4FE8",marginBottom:24,letterSpacing:"0.04em"}}>
           ⚡ USED BY 500+ FOUNDERS FROM YC, TECHSTARS & A16Z PORTFOLIO
         </div>
-        <h1 style={{fontSize:56,fontWeight:800,lineHeight:1.05,marginBottom:22,letterSpacing:"-0.03em"}}>
-          You just had a great<br/><span style={{color:"#7C6EF8"}}>investor call.</span><br/>Now what?
+        <h1 style={{fontSize:56,fontWeight:800,lineHeight:1.05,marginBottom:22,letterSpacing:"-0.03em",color:"#1A1A1F"}}>
+          You just had a great<br/><span style={{color:"#5B4FE8"}}>investor call.</span><br/>Now what?
         </h1>
-        <p style={{fontSize:17,color:"#9CA3AF",lineHeight:1.8,marginBottom:36,maxWidth:600}}>
+        <p style={{fontSize:17,color:"#52525E",lineHeight:1.8,marginBottom:36,maxWidth:600}}>
           Flo joins your calls, captures everything, and sends a clean summary to your team — so you stay fully present instead of frantically scribbling notes that fade by morning.
         </p>
         <div style={{display:"flex",gap:12,marginBottom:36,flexWrap:"wrap"}}>
           {["5 hrs/week saved","Zero missed follow-ups","Works with Zoom, Meet & Teams"].map((it,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"center",gap:6,background:"rgba(124,110,248,0.08)",border:"1px solid #2E2E4E",borderRadius:7,padding:"7px 13px",fontSize:12.5,color:"#A5B4FC"}}>
-              <span style={{color:"#7C6EF8"}}>✓</span>{it}
+            <div key={i} style={{display:"flex",alignItems:"center",gap:6,background:"#F4F3FE",border:"1px solid #E1DEFB",borderRadius:7,padding:"7px 13px",fontSize:12.5,color:"#4A3FC4"}}>
+              <span style={{color:"#5B4FE8"}}>✓</span>{it}
             </div>
           ))}
         </div>
-        <button style={{background:"#7C6EF8",color:"#fff",padding:"15px 34px",borderRadius:9,border:"none",fontWeight:800,fontSize:16,cursor:"pointer",marginBottom:10}}>Fix this today — free for 14 days</button>
-        <div style={{fontSize:11,color:"#52526E"}}>No credit card. Joins your next call automatically.</div>
+        <button style={{background:"#5B4FE8",color:"#fff",padding:"15px 34px",borderRadius:9,border:"none",fontWeight:800,fontSize:16,cursor:"pointer",marginBottom:10}}>Fix this today — free for 14 days</button>
+        <div style={{fontSize:11,color:"#8A8A94"}}>No credit card. Joins your next call automatically.</div>
       </div>
 
       {/* Social proof — from V3 */}
       <div style={{padding:"0 48px 52px",maxWidth:820,margin:"0 auto"}}>
         <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:22,flexWrap:"wrap"}}>
-          <span style={{fontSize:12,color:"#52526E",fontWeight:500}}>Trusted by founders from</span>
+          <span style={{fontSize:12,color:"#8A8A94",fontWeight:500}}>Trusted by founders from</span>
           {["YC","Techstars","a16z","First Round"].map(l=>(
-            <div key={l} style={{background:"#13131A",border:"1px solid #2E2E3E",padding:"3px 10px",borderRadius:5,fontSize:11,fontWeight:700,color:"#9CA3AF"}}>{l}</div>
+            <div key={l} style={{background:"#F7F7F9",border:"1px solid #EAEAEF",padding:"3px 10px",borderRadius:5,fontSize:11,fontWeight:700,color:"#52525E"}}>{l}</div>
           ))}
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:14,marginBottom:44}}>
           {[{q:"Flo's summaries are better than anything I could write myself. My team treats them as source of truth.",n:"Priya Nair",r:"Founder, Lumos (YC W24)"},{q:"I do 8 calls a day. Without Flo I'd lose my mind. Nothing falls through the cracks anymore.",n:"Ana Torres",r:"Founder, Spark (Techstars '23)"},{q:"We were losing deals because action items fell through the cracks. Flo fixed that in week one.",n:"Marcus Webb",r:"CEO, Stackr (Seed, $2.4M)"},{q:"The anxiety isn't the meeting. It's the 20 minutes after. Flo eliminated that entirely.",n:"David Kim",r:"Co-founder, Relay (Series A)"}].map((t,i)=>(
-            <div key={i} style={{background:"#13131A",border:"1px solid #2E2E3E",borderRadius:10,padding:20}}>
-              <p style={{fontSize:13,color:"#D1D5DB",lineHeight:1.7,marginBottom:12,fontStyle:"italic"}}>"{t.q}"</p>
+            <div key={i} style={{background:"#FAFAFB",border:"1px solid #EAEAEF",borderRadius:10,padding:20}}>
+              <p style={{fontSize:13,color:"#33333D",lineHeight:1.7,marginBottom:12,fontStyle:"italic"}}>"{t.q}"</p>
               <div style={{display:"flex",alignItems:"center",gap:9}}>
-                <div style={{width:28,height:28,borderRadius:"50%",background:"#7C6EF8",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,color:"#fff",fontSize:11}}>{t.n[0]}</div>
-                <div><div style={{fontSize:12,fontWeight:600}}>{t.n}</div><div style={{fontSize:10.5,color:"#52526E"}}>{t.r}</div></div>
+                <div style={{width:28,height:28,borderRadius:"50%",background:"#5B4FE8",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700,color:"#fff",fontSize:11}}>{t.n[0]}</div>
+                <div><div style={{fontSize:12,fontWeight:600,color:"#1A1A1F"}}>{t.n}</div><div style={{fontSize:10.5,color:"#8A8A94"}}>{t.r}</div></div>
               </div>
             </div>
           ))}
         </div>
         {/* How it works — below fold */}
-        <div style={{borderTop:"1px solid #1E1E2E",paddingTop:36,marginBottom:44}}>
-          <div style={{fontSize:10,fontWeight:700,color:"#52526E",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:20}}>How Flo works</div>
+        <div style={{borderTop:"1px solid #EAEAEF",paddingTop:36,marginBottom:44}}>
+          <div style={{fontSize:10,fontWeight:700,color:"#8A8A94",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:20}}>How Flo works</div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
             {[{i:"🎙️",t:"Auto-joins your calls",d:"Connects to your calendar and shows up to every meeting."},{i:"✅",t:"Extracts action items",d:"Every to-do, decision, and commitment pulled out automatically."},{i:"📨",t:"Sends summaries instantly",d:"Clean notes in Slack or email before you close the Zoom window."}].map((f,i)=>(
-              <div key={i} style={{background:"#13131A",borderRadius:9,padding:18,border:"1px solid #2E2E3E"}}>
+              <div key={i} style={{background:"#FAFAFB",borderRadius:9,padding:18,border:"1px solid #EAEAEF"}}>
                 <div style={{fontSize:22,marginBottom:8}}>{f.i}</div>
-                <div style={{fontWeight:600,fontSize:13,marginBottom:5}}>{f.t}</div>
-                <div style={{fontSize:12,color:"#52526E",lineHeight:1.6}}>{f.d}</div>
+                <div style={{fontWeight:600,fontSize:13,marginBottom:5,color:"#1A1A1F"}}>{f.t}</div>
+                <div style={{fontSize:12,color:"#6B6B76",lineHeight:1.6}}>{f.d}</div>
               </div>
             ))}
           </div>
         </div>
-        <div style={{background:"#13131A",border:"1px solid #2E2E3E",borderRadius:14,padding:32,textAlign:"center"}}>
-          <h2 style={{fontSize:26,fontWeight:800,marginBottom:10,letterSpacing:"-0.02em"}}>Stop reconstructing calls from memory</h2>
-          <p style={{color:"#52526E",fontSize:14,marginBottom:24}}>Join 500+ founders who let Flo handle the notes while they close the deals.</p>
-          <button style={{background:"#7C6EF8",color:"#fff",padding:"13px 34px",borderRadius:9,border:"none",fontWeight:700,fontSize:15,cursor:"pointer"}}>Fix this today — free for 14 days →</button>
-          <div style={{marginTop:10,fontSize:11,color:"#52526E"}}>No credit card. Cancel anytime.</div>
+        <div style={{background:"#F7F6FF",border:"1px solid #E1DEFB",borderRadius:14,padding:32,textAlign:"center"}}>
+          <h2 style={{fontSize:26,fontWeight:800,marginBottom:10,letterSpacing:"-0.02em",color:"#1A1A1F"}}>Stop reconstructing calls from memory</h2>
+          <p style={{color:"#52525E",fontSize:14,marginBottom:24}}>Join 500+ founders who let Flo handle the notes while they close the deals.</p>
+          <button style={{background:"#5B4FE8",color:"#fff",padding:"13px 34px",borderRadius:9,border:"none",fontWeight:700,fontSize:15,cursor:"pointer"}}>Fix this today — free for 14 days →</button>
+          <div style={{marginTop:10,fontSize:11,color:"#8A8A94"}}>No credit card. Cancel anytime.</div>
         </div>
       </div>
     </div>
@@ -1057,6 +1085,7 @@ function FloV6() {
 }
 
 const PAGE_COMPS = { v1:<FloV1/>, v2:<FloV2/>, v3:<FloV3/>, v4:<FloV4/>, v5:<FloV5/>, v6:<FloV6/> };
+
 
 /* ─────────────────────────────────────────────
    CUSTOM TOOLTIP
@@ -1484,7 +1513,7 @@ export default function PageMind() {
                       return { name:pg.ver, "CTA Click %": agg?.cta||0, fill: pg.color };
                     })} margin={{top:0,right:0,bottom:0,left:-20}}>
                       <XAxis dataKey="name" tick={{fill:T.muted,fontSize:11}} axisLine={false} tickLine={false}/>
-                      <YAxis tick={{fill:T.muted,fontSize:10}} axisLine={false} tickLine={false} domain={[0,40]}/>
+                      <YAxis tick={{fill:T.muted,fontSize:10}} axisLine={false} tickLine={false} domain={[0, dataMax => Math.ceil((dataMax||10)*1.25)]}/>
                       <Tooltip content={<PMTooltip/>}/>
                       <Bar dataKey="CTA Click %" radius={[4,4,0,0]}>
                         {PAGES.map((pg,i)=>(
@@ -1696,16 +1725,19 @@ export default function PageMind() {
                     )}
                     {(v6Decisions||FALLBACK_V6_DECISIONS).map((d,i)=>(
                       <div key={i} className="dec-item">
-                        <div className="dec-dot" style={{background:d.removed?T.muted:d.srcColor}}/>
-                        <div style={{flex:1}}>
-                          <div className="dec-el">
-                            {d.el}
-                            <span className="dec-pill" style={{color:d.removed?T.muted:d.srcColor,borderColor:d.removed?T.muted:d.srcColor,background:d.removed?T.raised:`${d.srcColor}18`}}>
-                              {d.removed?"✕ Removed":`From ${d.src}`}
+                        <div className="dec-stripe" style={{background:d.removed?T.muted:d.srcColor}}/>
+                        <div className="dec-body">
+                          <div className="dec-head">
+                            <span className="dec-el">{d.el}</span>
+                            <span className="dec-pill" style={{color:d.removed?T.muted:d.srcColor,borderColor:d.removed?T.muted:d.srcColor,background:d.removed?T.raised:`${d.srcColor}14`}}>
+                              {d.removed?"✕ removed":`from ${d.src}`}
                             </span>
                           </div>
-                          <div className="dec-quote">→ {d.quote}</div>
-                          <div className="dec-reason">{d.reason}</div>
+                          <div className="dec-quote-box" style={{borderLeftColor:d.removed?T.muted:d.srcColor}}>{d.quote}</div>
+                          <div className="dec-why-row">
+                            <span className="dec-why-label">Why</span>
+                            <span className="dec-reason">{d.reason}</span>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -1795,3 +1827,4 @@ export default function PageMind() {
     </>
   );
 }
+
