@@ -709,53 +709,58 @@ const SIM_DATA = buildSimData();
    elements Claude picked: V4 headline+subtext+CTA
    (highest founder engagement), V3 social proof
    (highest dwell), V5 outcome strip (best scroll).
-   The combination produces a page that outperforms
-   on founder metrics specifically — but not by a
-   suspiciously perfect margin. Real improvement,
-   believably imperfect.
+   V6 wins clearly on all 3 founder metrics vs R1
+   best (V4): CTA 31→40%, Scroll 88→93%, Bounce 10→7%.
+   Margins are real but not suspiciously perfect.
+   V6 is mediocre with enterprise/student/VC — it was
+   optimized for founders, not everyone.
+   Key founder metrics are LOCKED (no jitter) so the
+   story is consistent every time you run Round 2.
 ───────────────────────────────────────────── */
 const BEH_R2 = {
-  // V6 — the synthesized page. Strong on everything
-  // founders responded to, weak where it made no claim.
   v6: {
-    founder:    { scroll:91, bounce:8,  cta:38, hero:1.8, s2:2.2, s3:1.7, s4:1.4, s5:1.6 },
-    enterprise: { scroll:60, bounce:28, cta:7,  hero:0.8, s2:0.9, s3:1.1, s4:0.9, s5:0.5 },
-    freelancer: { scroll:72, bounce:19, cta:17, hero:1.3, s2:1.1, s3:1.3, s4:1.0, s5:1.1 },
-    student:    { scroll:52, bounce:36, cta:2,  hero:0.9, s2:0.7, s3:0.6, s4:0.5, s5:0.2 },
-    indie:      { scroll:78, bounce:14, cta:21, hero:1.4, s2:1.2, s3:1.3, s4:1.1, s5:1.2 },
-    vc:         { scroll:58, bounce:32, cta:3,  hero:0.9, s2:1.2, s3:0.9, s4:1.1, s5:0.2 },
+    founder:    { scroll:93, bounce:7,  cta:40, hero:1.9, s2:2.3, s3:1.8, s4:1.5, s5:1.7 },
+    enterprise: { scroll:58, bounce:30, cta:6,  hero:0.7, s2:0.8, s3:1.0, s4:0.8, s5:0.4 },
+    freelancer: { scroll:70, bounce:20, cta:16, hero:1.2, s2:1.1, s3:1.2, s4:1.0, s5:1.0 },
+    student:    { scroll:50, bounce:38, cta:2,  hero:0.8, s2:0.6, s3:0.5, s4:0.4, s5:0.2 },
+    indie:      { scroll:76, bounce:15, cta:20, hero:1.3, s2:1.2, s3:1.2, s4:1.1, s5:1.1 },
+    vc:         { scroll:55, bounce:34, cta:3,  hero:0.8, s2:1.1, s3:0.8, s4:1.0, s5:0.2 },
   },
 };
 
 function buildR2Data() {
   const out = {};
-  // V1-V5 carry forward from Round 1 with slight natural variance
+  // V1–V5 carry forward from Round 1 with slight natural variance
   PAGES.forEach(pg => {
     out[pg.id] = {};
     PERSONAS.forEach(p => {
       const r1 = SIM_DATA[pg.id][p.id];
       out[pg.id][p.id] = {
         count: r1.count,
-        scroll: Math.max(10, jitter(r1.scroll, 4)),
-        bounce: Math.max(4,  jitter(r1.bounce, 3)),
-        cta:    Math.min(48, jitter(r1.cta, 3)),
-        hover:  Math.min(68, jitter(r1.hover, 4)),
-        dwell:  Object.fromEntries(Object.entries(r1.dwell).map(([k,v]) => [k, Math.round(jitter(v, 3))])),
+        scroll: Math.max(10, jitter(r1.scroll, 3)),
+        bounce: Math.max(4,  jitter(r1.bounce, 2)),
+        cta:    Math.min(48, jitter(r1.cta, 2)),
+        hover:  Math.min(68, jitter(r1.hover, 3)),
+        dwell:  Object.fromEntries(Object.entries(r1.dwell).map(([k,v]) => [k, Math.round(jitter(v, 2))])),
       };
     });
   });
-  // V6 — new entrant
+  // V6 — new entrant. Founder's 3 headline metrics are LOCKED
+  // (no jitter) so V6 consistently wins the story every run.
+  // Other personas and dwell times still have natural variance.
   out["v6"] = {};
   PERSONAS.forEach(p => {
     const b = BEH_R2.v6[p.id];
     const dwell = {};
-    SECTION_KEYS.forEach(k => { dwell[k] = Math.round((b[k]||1) * 20 * (0.8+Math.random()*0.4)); });
+    SECTION_KEYS.forEach(k => { dwell[k] = Math.round((b[k]||1) * 20 * (0.85+Math.random()*0.3)); });
+    const isFounder = p.id === "founder";
     out["v6"][p.id] = {
-      count: Math.round(200*p.w),
-      scroll: jitter(b.scroll, 4),
-      bounce: Math.max(4, jitter(b.bounce, 3)),
-      cta:    Math.min(48, jitter(b.cta, 4)),
-      hover:  Math.min(68, jitter(b.cta*2.1, 5)),
+      count:  Math.round(200*p.w),
+      // Founder scroll/bounce/cta locked — no jitter — so V6 always wins clearly
+      scroll: isFounder ? b.scroll : Math.max(10, jitter(b.scroll, 4)),
+      bounce: isFounder ? b.bounce : Math.max(4,  jitter(b.bounce, 3)),
+      cta:    isFounder ? b.cta    : Math.min(48, jitter(b.cta, 4)),
+      hover:  Math.min(68, b.cta*2.1 + (isFounder ? 0 : jitter(0, 5))),
       dwell,
     };
   });
@@ -2287,10 +2292,18 @@ export default function PageMind() {
                                   </div>
                                 </div>
                                 <div style={{fontSize:12,fontWeight:700,color:m.better?T.green:T.red}}>
-                                  {m.better?"+":""}{m.lowerBetter?"-":""}{Math.abs(pct)}% {m.better?(m.lowerBetter?"lower":"higher"):"worse"}
+                                  {m.lowerBetter
+                                    ? (m.better ? `${Math.abs(pct)}% lower` : `${Math.abs(pct)}% higher (worse)`)
+                                    : (m.better ? `+${Math.abs(pct)}% higher` : `-${Math.abs(pct)}% lower (worse)`)
+                                  }
                                 </div>
                                 <div className="pm-progress" style={{marginTop:8}}>
-                                  <div className="pm-progress-fill" style={{width:`${Math.min(100, m.r2/Math.max(m.r1,m.r2)*100)}%`,background:m.better?T.accent:T.red}}/>
+                                  <div className="pm-progress-fill" style={{
+                                    width: m.lowerBetter
+                                      ? `${Math.min(100, (1 - m.r2/Math.max(m.r1,m.r2))*100 + 20)}%`
+                                      : `${Math.min(100, m.r2/Math.max(m.r1,m.r2)*100)}%`,
+                                    background:m.better?T.accent:T.red
+                                  }}/>
                                 </div>
                               </div>
                             );
