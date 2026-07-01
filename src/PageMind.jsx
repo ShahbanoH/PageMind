@@ -2266,17 +2266,22 @@ export default function PageMind() {
                       <div style={{fontSize:11,color:T.muted,marginBottom:16}}>How much V6 moved the needle on the metrics that matter for your ICP.</div>
                       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
                         {(()=>{
-                          const r1Best = ranked(true)[0];
+                          // Use V4's locked behavioral values as the R1 baseline —
+                          // V4 is always the Round 1 ICP winner by design, and its
+                          // raw BEH values are stable (no jitter). This prevents the
+                          // "R1 best" number from shifting between runs.
+                          const R1_BASELINE = { cta: BEH.founder.v4.cta, scroll: BEH.founder.v4.scroll, bounce: BEH.founder.v4.bounce };
                           const v6agg = aggR2("v6", true);
-                          const r1agg = r1Best?.agg;
-                          if(!v6agg||!r1agg) return null;
+                          if(!v6agg) return null;
                           return [
-                            { label:"CTA Click Rate", r1: r1agg.cta, r2: v6agg.cta, suffix:"%", better: v6agg.cta > r1agg.cta },
-                            { label:"Scroll Depth",   r1: r1agg.scroll, r2: v6agg.scroll, suffix:"%", better: v6agg.scroll > r1agg.scroll },
-                            { label:"Bounce Rate",    r1: r1agg.bounce, r2: v6agg.bounce, suffix:"%", better: v6agg.bounce < r1agg.bounce, lowerBetter:true },
+                            { label:"CTA Click Rate", r1: R1_BASELINE.cta,    r2: v6agg.cta,    suffix:"%", better: v6agg.cta > R1_BASELINE.cta },
+                            { label:"Scroll Depth",   r1: R1_BASELINE.scroll, r2: v6agg.scroll, suffix:"%", better: v6agg.scroll > R1_BASELINE.scroll },
+                            { label:"Bounce Rate",    r1: R1_BASELINE.bounce, r2: v6agg.bounce, suffix:"%", better: v6agg.bounce < R1_BASELINE.bounce, lowerBetter:true },
                           ].map((m,i)=>{
                             const delta = m.lowerBetter ? m.r1 - m.r2 : m.r2 - m.r1;
-                            const pct = Math.round((delta / Math.max(1,m.r1))*100);
+                            // Show absolute percentage point difference, not relative % change
+                            // e.g. 31% → 40% = +9pp, not +29%
+                            const pp = Math.abs(Math.round(m.r2 - m.r1));
                             return (
                               <div key={i} style={{background:T.raised,borderRadius:10,padding:16,border:`1px solid ${m.better?T.accent:T.border}`}}>
                                 <div style={{fontSize:11,color:T.muted,marginBottom:8}}>{m.label}</div>
@@ -2293,8 +2298,8 @@ export default function PageMind() {
                                 </div>
                                 <div style={{fontSize:12,fontWeight:700,color:m.better?T.green:T.red}}>
                                   {m.lowerBetter
-                                    ? (m.better ? `${Math.abs(pct)}% lower` : `${Math.abs(pct)}% higher (worse)`)
-                                    : (m.better ? `+${Math.abs(pct)}% higher` : `-${Math.abs(pct)}% lower (worse)`)
+                                    ? (m.better ? `${pp}pp lower` : `${pp}pp higher (worse)`)
+                                    : (m.better ? `+${pp}pp higher` : `-${pp}pp lower (worse)`)
                                   }
                                 </div>
                                 <div className="pm-progress" style={{marginTop:8}}>
@@ -2321,19 +2326,20 @@ export default function PageMind() {
                       </div>
                       <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
                         {(()=>{
-                          const r1Best = ranked(true)[0];
+                          // Use V4's aggPage score as the locked R1 baseline
+                          const r1Score = aggPage("v4", true)?.score || 0;
                           const v6agg = aggR2("v6",true);
-                          if(!v6agg||!r1Best?.agg) return null;
-                          const delta = v6agg.score - r1Best.agg.score;
+                          if(!v6agg) return null;
+                          const delta = v6agg.score - r1Score;
                           return [
                             <div key="score" style={{background:T.surface,borderRadius:8,padding:"8px 14px",border:`1px solid ${T.accent}`,fontSize:13,fontWeight:700,color:T.accent}}>
-                              Score: {r1Best.agg.score} → {v6agg.score} (+{delta} pts)
+                              Score: {r1Score} → {v6agg.score} (+{delta} pts)
                             </div>,
                             <div key="rank" style={{background:T.surface,borderRadius:8,padding:"8px 14px",border:`1px solid ${T.accent}`,fontSize:13,fontWeight:700,color:T.accent}}>
                               V6 ranks #1 with founders
                             </div>,
                             <div key="pages" style={{background:T.surface,borderRadius:8,padding:"8px 14px",border:`1px solid ${T.border}`,fontSize:13,color:T.muted}}>
-                              Beats {ranked(true).length} original pages
+                              Beats {PAGES.length} original pages
                             </div>,
                           ];
                         })()}
